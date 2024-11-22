@@ -1,0 +1,35 @@
+package br.com.fiap.bo;
+
+
+import java.sql.SQLException;
+
+import br.com.fiap.beans.Motorista;
+import br.com.fiap.exceptions.MotoristaNaoEncontradoException;
+import br.fiap.com.dao.MotoristaDAO;
+
+public class MotoristaBO {
+
+    private MotoristaDAO motoristaDAO = new MotoristaDAO();
+
+    public Motorista getMotoristaByCPF(String cpf) throws SQLException, MotoristaNaoEncontradoException {
+        Motorista motorista = motoristaDAO.buscarMotoristaPorCPF(cpf);
+        if (motorista == null) {
+            throw new MotoristaNaoEncontradoException("Motorista não encontrado.");
+        }
+        return motorista;
+    }
+
+    public void inserirMotorista(Motorista motorista) throws SQLException {
+    	motorista.setStatusMotorista("Ativo");
+    	motorista.setTotalCarbono(0);
+        motoristaDAO.inserir(motorista);
+    }
+
+    public void atualizarMotorista(Motorista motorista) throws SQLException {
+        motoristaDAO.atualizar(motorista);
+    }
+
+    public void deletarMotorista(String cpf) throws SQLException {
+        motoristaDAO.deletar(cpf);
+    }
+}

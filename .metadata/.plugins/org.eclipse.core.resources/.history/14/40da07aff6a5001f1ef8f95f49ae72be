@@ -1,0 +1,5 @@
+package br.fiap.com.dao;
+
+public class PassageiroDAO {
+
+}

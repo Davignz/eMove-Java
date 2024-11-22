@@ -1,0 +1,100 @@
+package br.com.fiap.servlet;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import br.com.fiap.conexao.ConexaoFactory;
+import br.com.fiap.beans.Motorista;
+import br.com.fiap.beans.Passageiro;
+
+public class LoginServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // Permite requisições de qualquer origem
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+        // Lógica do login
+        try {
+            String email = request.getParameter("email");
+
+            // Conexão com o banco de dados
+            try (Connection conn = new ConexaoFactory().conexao()) {
+                // SQL para buscar o motorista pelo email
+                String sqlMotorista = "SELECT cpf_motorista AS cpf, nome, tipo_usuario FROM MOTORISTAS WHERE email = ?";
+                // SQL para buscar o passageiro pelo email
+                String sqlPassageiro = "SELECT cpf_passageiro AS cpf, nome, tipo_usuario FROM PASSAGEIROS WHERE email = ?";
+
+                // Verificar se o usuário é um motorista
+                try (PreparedStatement stmt = conn.prepareStatement(sqlMotorista)) {
+                    stmt.setString(1, email);
+                    ResultSet rs = stmt.executeQuery();
+
+                    if (rs.next()) {
+                        // Cria o objeto Motorista com os dados encontrados
+                        Motorista motorista = new Motorista(
+                            rs.getString("cpf"),
+                            rs.getString("nome")
+                        );
+
+                        // Retorna os dados do motorista
+                        response.getWriter().write(
+                            "{" +
+                            "\"email\":\"" + email + "\"," +
+                            "\"cpf\":\"" + motorista.getCpf() + "\"," +
+                            "\"nome\":\"" + motorista.getNome() + 
+                            "}"
+                        );
+                        return; // Caso o motorista seja encontrado, retorna e não verifica o passageiro
+                    }
+                }
+
+                // Verificar se o usuário é um passageiro
+                try (PreparedStatement stmt = conn.prepareStatement(sqlPassageiro)) {
+                    stmt.setString(1, email);
+                    ResultSet rs = stmt.executeQuery();
+
+                    if (rs.next()) {
+                        // Cria o objeto Passageiro com os dados encontrados
+                        Passageiro passageiro = new Passageiro(
+                            rs.getString("cpf"),
+                            rs.getString("nome")
+                        );
+
+                        // Retorna os dados do passageiro
+                        response.getWriter().write(
+                            "{" +
+                            "\"email\":\"" + email + "\"," +
+                            "\"cpf\":\"" + passageiro.getCpf() + "\"," +
+                            "\"nome\":\"" + passageiro.getNome() +
+                            "}"
+                        );
+                        return; // Caso o passageiro seja encontrado, retorna
+                    }
+                }
+
+                // Caso o usuário não seja encontrado em nenhuma das tabelas
+                response.setStatus(HttpServletResponse.SC_OK); // Retorna sucesso, mas com erro
+                response.getWriter().write("{\"error\":\"Email não encontrado\"}");
+
+            } catch (SQLException e) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().write("{\"error\":\"Erro ao acessar o banco de dados\"}");
+            }
+
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"error\":\"Erro no servidor\"}");
+        }
+    }
+}

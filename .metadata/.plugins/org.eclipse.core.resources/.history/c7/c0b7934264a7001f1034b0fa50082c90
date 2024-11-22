@@ -1,0 +1,15 @@
+package br.com.fiap.main;
+
+import br.fiap.com.dao.UsuarioDAO;
+
+public class TesteSenha {
+
+	public static void main(String[] args) {
+	    UsuarioDAO dao = new UsuarioDAO(null); // Simula sem conexão apenas para teste
+	    String senhaOriginal = "minhaSenha123";
+	    String senhaHasheada = dao.hashSenha(senhaOriginal);
+	    System.out.println("Senha original: " + senhaOriginal);
+	    System.out.println("Senha hasheada: " + senhaHasheada);
+	}
+
+}

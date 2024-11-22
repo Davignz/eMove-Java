@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="br.fiap.com.dao.PassageiroDAO"/>
+    <fullyQualifiedTypeName name="java.io.Console"/>
+    <fullyQualifiedTypeName name="java.net.PasswordAuthentication"/>
+    <fullyQualifiedTypeName name="java.security.PrivateKey"/>
+    <fullyQualifiedTypeName name="java.security.PublicKey"/>
+    <fullyQualifiedTypeName name="br.com.fiap.resource.LoginResource"/>
+    <fullyQualifiedTypeName name="br.com.fiap.beans.Motorista"/>
+    <fullyQualifiedTypeName name="br.com.fiap.beans.Passageiro"/>
+    <fullyQualifiedTypeName name="br.com.fiap.beans.Usuario"/>
+    <fullyQualifiedTypeName name="br.com.fiap.resource.MotoristaResource"/>
+    <fullyQualifiedTypeName name="br.com.fiap.conexao.ConexaoFactory"/>
+    <fullyQualifiedTypeName name="java.sql.Connection"/>
+    <fullyQualifiedTypeName name="jakarta.ws.rs.core.MediaType"/>
+    <fullyQualifiedTypeName name="java.lang.Override"/>
+    <fullyQualifiedTypeName name="javax.ws.rs.core.MediaType"/>
+    <fullyQualifiedTypeName name="java.sql.SQLException"/>
+    <fullyQualifiedTypeName name="java.lang.String"/>
+    <fullyQualifiedTypeName name="br.com.fiap.beans.Veiculo"/>
+    <fullyQualifiedTypeName name="javax.ws.rs.Path"/>
+    <fullyQualifiedTypeName name="br.com.fiap.dao.CaronaDAO"/>
+    <fullyQualifiedTypeName name="br.com.fiap.beans.CadastroCaronaRequest"/>
+</qualifiedTypeNameHistroy>

@@ -1,0 +1,25 @@
+package br.com.fiap.bo;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import br.com.fiap.beans.Veiculo;
+import br.com.fiap.conexao.ConexaoFactory;
+
+public class VeiculoBO {
+
+    private Connection connection;
+
+	public void VeiculoDAO() {
+        try {
+            
+            this.connection = new ConexaoFactory().conexao();
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("Erro ao obter conexão: " + e.getMessage());
+        }
+    }
+
+    public void inserir(Veiculo veiculo) throws SQLException {
+        veiculoDAO.inserir(veiculo);
+    }
+}

@@ -1,0 +1,30 @@
+package br.com.fiap.resource;
+
+import java.sql.SQLException;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import br.com.fiap.beans.Veiculo;
+import br.com.fiap.bo.VeiculoBO;
+@Path("/veiculo")
+public class VeiculoResource {
+	private VeiculoBO veiculoBO = new VeiculoBO();
+
+    // Método GET para buscar veículo por placa
+    @GET
+    @Path("/{placa}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getVeiculoByPlaca(@PathParam("placa") String placa) throws SQLException {
+        try {
+            Veiculo veiculo = veiculoBO.getVeiculoByPlaca(placa);
+            return Response.ok(veiculo).build();
+        } catch (VeiculoNaoEncontradoException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+}

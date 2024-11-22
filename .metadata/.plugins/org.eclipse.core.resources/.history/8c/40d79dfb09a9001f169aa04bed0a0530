@@ -1,0 +1,156 @@
+package br.com.fiap.beans;
+
+import java.time.LocalDateTime;
+
+public class Carona {
+    private int idCarona;
+    private LocalDateTime dataHora;
+    private String enderecoPartida;
+    private int numeroPartida;
+    private String bairroPartida;
+    private String enderecoChegada;
+    private int numeroChegada;
+    private String bairroChegada;
+    private double precoCarona;
+    private double quilometragem;
+    private double qtdCarbono;
+    private String cpfMotorista;
+    private String placa;
+    private int idPagamento;
+
+    // Construtor padrão
+    public Carona() {}
+
+    // Construtor completo
+    public Carona(int idCarona, LocalDateTime dataHora, String enderecoPartida, int numeroPartida, String bairroPartida,
+                  String enderecoChegada, int numeroChegada, String bairroChegada, double precoCarona,
+                  double quilometragem, double qtdCarbono, String cpfMotorista, String placa, int idPagamento) {
+        this.idCarona = idCarona;
+        this.dataHora = dataHora;
+        this.enderecoPartida = enderecoPartida;
+        this.numeroPartida = numeroPartida;
+        this.bairroPartida = bairroPartida;
+        this.enderecoChegada = enderecoChegada;
+        this.numeroChegada = numeroChegada;
+        this.bairroChegada = bairroChegada;
+        this.precoCarona = precoCarona;
+        this.quilometragem = quilometragem;
+        this.qtdCarbono = qtdCarbono;
+        this.cpfMotorista = cpfMotorista;
+        this.placa = placa;
+        this.idPagamento = idPagamento;
+    }
+
+    // Getters e Setters
+    public int getIdCarona() {
+        return idCarona;
+    }
+
+    public void setIdCarona(int idCarona) {
+        this.idCarona = idCarona;
+    }
+
+    public LocalDateTime getDataHora() {
+        return dataHora;
+    }
+
+    public void setDataHora(LocalDateTime dataHora) {
+        this.dataHora = dataHora;
+    }
+
+    public String getEnderecoPartida() {
+        return enderecoPartida;
+    }
+
+    public void setEnderecoPartida(String enderecoPartida) {
+        this.enderecoPartida = enderecoPartida;
+    }
+
+    public int getNumeroPartida() {
+        return numeroPartida;
+    }
+
+    public void setNumeroPartida(int numeroPartida) {
+        this.numeroPartida = numeroPartida;
+    }
+
+    public String getBairroPartida() {
+        return bairroPartida;
+    }
+
+    public void setBairroPartida(String bairroPartida) {
+        this.bairroPartida = bairroPartida;
+    }
+
+    public String getEnderecoChegada() {
+        return enderecoChegada;
+    }
+
+    public void setEnderecoChegada(String enderecoChegada) {
+        this.enderecoChegada = enderecoChegada;
+    }
+
+    public int getNumeroChegada() {
+        return numeroChegada;
+    }
+
+    public void setNumeroChegada(int numeroChegada) {
+        this.numeroChegada = numeroChegada;
+    }
+
+    public String getBairroChegada() {
+        return bairroChegada;
+    }
+
+    public void setBairroChegada(String bairroChegada) {
+        this.bairroChegada = bairroChegada;
+    }
+
+    public double getPrecoCarona() {
+        return precoCarona;
+    }
+
+    public void setPrecoCarona(double precoCarona) {
+        this.precoCarona = precoCarona;
+    }
+
+    public double getQuilometragem() {
+        return quilometragem;
+    }
+
+    public void setQuilometragem(double quilometragem) {
+        this.quilometragem = quilometragem;
+    }
+
+    public double getQtdCarbono() {
+        return qtdCarbono;
+    }
+
+    public void setQtdCarbono(double qtdCarbono) {
+        this.qtdCarbono = qtdCarbono;
+    }
+
+    public String getCpfMotorista() {
+        return cpfMotorista;
+    }
+
+    public void setCpfMotorista(String cpfMotorista) {
+        this.cpfMotorista = cpfMotorista;
+    }
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
+
+    public int getIdPagamento() {
+        return idPagamento;
+    }
+
+    public void setIdPagamento(int idPagamento) {
+        this.idPagamento = idPagamento;
+    }
+}

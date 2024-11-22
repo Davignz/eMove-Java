@@ -1,0 +1,15 @@
+package br.com.fiap.bo;
+
+import java.sql.SQLException;
+
+import br.com.fiap.beans.Veiculo;
+import br.com.fiap.dao.VeiculoDAO;
+
+public class VeiculoBO {
+
+    private VeiculoDAO veiculoDAO = new VeiculoDAO();
+
+    public void inserir(Veiculo veiculo) throws SQLException {
+        veiculoDAO.inserir(veiculo);
+    }
+}

@@ -1,0 +1,112 @@
+package br.com.fiap.dao;
+
+import br.com.fiap.beans.Carona;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CaronaDAO {
+
+    private Connection connection;
+
+    public CaronaDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    public void criarCarona(Carona carona) throws SQLException {
+        String sql = "INSERT INTO CARONAS (data_hora, endereco_partida, numero_partida, bairro_partida, endereco_chegada, " +
+                     "numero_chegada, bairro_chegada, preco_carona, quilometragem, qtd_carbono, cpf_motorista, placa, id_pagamento) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setTimestamp(1, Timestamp.valueOf(carona.getDataHora()));
+            stmt.setString(2, carona.getEnderecoPartida());
+            stmt.setInt(3, carona.getNumeroPartida());
+            stmt.setString(4, carona.getBairroPartida());
+            stmt.setString(5, carona.getEnderecoChegada());
+            stmt.setInt(6, carona.getNumeroChegada());
+            stmt.setString(7, carona.getBairroChegada());
+            stmt.setDouble(8, carona.getPrecoCarona());
+            stmt.setDouble(9, carona.getQuilometragem());
+            stmt.setDouble(10, carona.getQtdCarbono());
+            stmt.setString(11, carona.getCpfMotorista());
+            stmt.setString(12, carona.getPlaca());
+            stmt.setInt(13, carona.getIdPagamento());
+            stmt.executeUpdate();
+        }
+    }
+
+    public Carona getCaronaById(int id) throws SQLException {
+        String sql = "SELECT * FROM CARONAS WHERE id_carona = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToCarona(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<Carona> listarCaronas() throws SQLException {
+        List<Carona> caronas = new ArrayList<>();
+        String sql = "SELECT * FROM CARONAS";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                caronas.add(mapResultSetToCarona(rs));
+            }
+        }
+        return caronas;
+    }
+
+    public boolean atualizarCarona(Carona carona) throws SQLException {
+        String sql = "UPDATE CARONAS SET data_hora = ?, endereco_partida = ?, numero_partida = ?, bairro_partida = ?, " +
+                     "endereco_chegada = ?, numero_chegada = ?, bairro_chegada = ?, preco_carona = ?, quilometragem = ?, " +
+                     "qtd_carbono = ?, cpf_motorista = ?, placa = ?, id_pagamento = ? WHERE id_carona = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setTimestamp(1, Timestamp.valueOf(carona.getDataHora()));
+            stmt.setString(2, carona.getEnderecoPartida());
+            stmt.setInt(3, carona.getNumeroPartida());
+            stmt.setString(4, carona.getBairroPartida());
+            stmt.setString(5, carona.getEnderecoChegada());
+            stmt.setInt(6, carona.getNumeroChegada());
+            stmt.setString(7, carona.getBairroChegada());
+            stmt.setDouble(8, carona.getPrecoCarona());
+            stmt.setDouble(9, carona.getQuilometragem());
+            stmt.setDouble(10, carona.getQtdCarbono());
+            stmt.setString(11, carona.getCpfMotorista());
+            stmt.setString(12, carona.getPlaca());
+            stmt.setInt(13, carona.getIdPagamento());
+            stmt.setInt(14, carona.getIdCarona());
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean deletarCarona(int id) throws SQLException {
+        String sql = "DELETE FROM CARONAS WHERE id_carona = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    private Carona mapResultSetToCarona(ResultSet rs) throws SQLException {
+        return new Carona(
+                rs.getInt("id_carona"),
+                rs.getTimestamp("data_hora").toLocalDateTime(),
+                rs.getString("endereco_partida"),
+                rs.getInt("numero_partida"),
+                rs.getString("bairro_partida"),
+                rs.getString("endereco_chegada"),
+                rs.getInt("numero_chegada"),
+                rs.getString("bairro_chegada"),
+                rs.getDouble("preco_carona"),
+                rs.getDouble("quilometragem"),
+                rs.getDouble("qtd_carbono"),
+                rs.getString("cpf_motorista"),
+                rs.getString("placa"),
+                rs.getInt("id_pagamento")
+        );
+    }
+}

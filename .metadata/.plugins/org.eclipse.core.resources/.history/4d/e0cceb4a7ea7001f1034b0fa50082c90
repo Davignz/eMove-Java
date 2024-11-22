@@ -1,0 +1,66 @@
+package br.com.fiap.resource;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import br.com.fiap.beans.Motorista;
+import br.com.fiap.beans.Passageiro;
+import br.com.fiap.conexao.ConexaoFactory;
+
+
+public class LoginResource {
+
+    @POST
+    @Path("/login")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response login(String email) throws ClassNotFoundException {
+        
+        // Define SQL para procurar o usuário nas tabelas MOTORISTAS e PASSAGEIROS
+        String sqlMotorista = "SELECT cpf_motorista AS cpf, nome FROM MOTORISTAS WHERE email = ?";
+        String sqlPassageiro = "SELECT cpf_passageiro AS cpf, nome FROM PASSAGEIROS WHERE email = ?";
+
+        try (Connection conn = new ConexaoFactory().conexao();
+             PreparedStatement stmtMotorista = conn.prepareStatement(sqlMotorista);
+             PreparedStatement stmtPassageiro = conn.prepareStatement(sqlPassageiro)) {
+
+            // Verificar se o usuário é um Motorista
+            stmtMotorista.setString(1, email);
+            ResultSet rsMotorista = stmtMotorista.executeQuery();
+
+            if (rsMotorista.next()) {
+                
+                return Response.ok(motorista).build();
+            }
+
+            // Verificar se o usuário é um Passageiro
+            stmtPassageiro.setString(1, email);
+            ResultSet rsPassageiro = stmtPassageiro.executeQuery();
+
+            if (rsPassageiro.next()) {
+                // Retorna dados do passageiro
+                Passageiro passageiro = new Passageiro(
+                    rsPassageiro.getString("cpf"),
+                    rsPassageiro.getString("nome")
+                );
+                return Response.ok(passageiro).build();
+            }
+
+            // Caso o usuário não seja encontrado
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Email não encontrado").build();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao acessar o banco de dados").build();
+        }
+    }
+}

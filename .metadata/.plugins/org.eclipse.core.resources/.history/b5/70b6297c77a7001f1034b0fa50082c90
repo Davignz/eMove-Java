@@ -1,0 +1,41 @@
+package br.com.fiap.servlet;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import br.com.fiap.beans.Usuario;
+
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Permite requisições de qualquer origem
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+    // Lógica do login
+    try {
+        String email = request.getParameter("email");
+
+        // Recupera o usuário com base no email
+        Usuario usuario = usuarioDAO.autenticarPorEmail(email);
+
+        // Retorna os dados do usuário sem verificação explícita de credenciais
+        if (usuario != null) {
+            response.getWriter().write(
+                "{" +
+                "\"email\":\"" + usuario.getEmail() + "\"," +
+                "\"tipoUsuario\":\"" + usuario.getTipoUsuario() + "\"," +
+                "\"idReferencia\":\"" + usuario.getIdReferencia() + "\"" +
+                "}"
+            );
+        } else {
+            // Caso não encontre o usuário, retorna um erro genérico
+            response.setStatus(HttpServletResponse.SC_OK); // Retorna com sucesso, mas sem dados
+            response.getWriter().write("{\"error\":\"Email não encontrado\"}");
+        }
+    } catch (Exception e) {
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        response.getWriter().write("{\"error\":\"Erro no servidor\"}");
+    }
+}

@@ -1,0 +1,57 @@
+package br.com.fiap.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.List;
+
+import br.com.fiap.beans.Carona;
+
+public class CaronaDAO {
+
+    private Connection connection;
+
+    public CaronaDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    public void criarCarona(Carona carona) throws SQLException {
+        String sql = "INSERT INTO CARONAS (data_hora, endereco_partida, numero_partida, bairro_partida, endereco_chegada, " +
+                     "numero_chegada, bairro_chegada, preco_carona, quilometragem, qtd_carbono, cpf_motorista, placa, id_pagamento) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setTimestamp(1, Timestamp.valueOf(carona.getDataHora()));
+            stmt.setString(2, carona.getEnderecoPartida());
+            stmt.setInt(3, carona.getNumeroPartida());
+            stmt.setString(4, carona.getBairroPartida());
+            stmt.setString(5, carona.getEnderecoChegada());
+            stmt.setInt(6, carona.getNumeroChegada());
+            stmt.setString(7, carona.getBairroChegada());
+            stmt.setDouble(8, carona.getPrecoCarona());
+            stmt.setDouble(9, carona.getQuilometragem());
+            stmt.setDouble(10, carona.getQtdCarbono());
+            stmt.setString(11, carona.getCpfMotorista());
+            stmt.setString(12, carona.getPlaca());
+            stmt.setInt(13, carona.getIdPagamento());
+            stmt.executeUpdate();
+        }
+    }
+
+    public Carona getCaronaById(int id) throws SQLException {
+        String sql = "SELECT * FROM CARONAS WHERE id_carona = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToCarona(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<Carona> listarCaronas() throws SQLException {
+        List<Carona> caronas = new ArrayList<>();
+    

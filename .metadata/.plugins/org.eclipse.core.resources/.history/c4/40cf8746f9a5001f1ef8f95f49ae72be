@@ -1,0 +1,67 @@
+package br.fiap.com.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import br.com.fiap.beans.Passageiro;
+import br.com.fiap.conexao.ConexaoFactory;
+
+public class PassageiroDAO {
+	
+    private Connection connection;
+
+    public PassageiroDAO(Connection connection) {
+        this.connection = connection;
+    }
+    
+    public PassageiroDAO() {
+        try {
+            
+            this.connection = new ConexaoFactory().conexao();
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("Erro ao obter conexão: " + e.getMessage());
+        }
+    }
+    
+    public boolean inserirPassageiro(Passageiro passageiro) {
+        String sql = "INSERT INTO PASSAGEIROS (cpf, nome, email, telefone, cep, saldo, total_carbono) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, passageiro.getCpf());
+            stmt.setString(2, passageiro.getNome());
+            stmt.setString(3, passageiro.getEmail());
+            stmt.setString(4, passageiro.getTelefone());
+            stmt.setString(5, passageiro.getCep());
+            stmt.setDouble(6, passageiro.getSaldo());
+            stmt.setDouble(7, passageiro.getTotalCarbono());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Passageiro buscarPorCPF(String cpf) {
+        String sql = "SELECT * FROM PASSAGEIROS WHERE cpf = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, cpf);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Passageiro(
+                        rs.getString("cpf"),
+                        rs.getString("nome"),
+                        rs.getString("email"),
+                        rs.getString("telefone"),
+                        rs.getString("cep"),
+                        rs.getDouble("saldo"),
+                        rs.getDouble("total_carbono")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}

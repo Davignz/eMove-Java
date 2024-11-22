@@ -1,0 +1,50 @@
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import br.com.fiap.beans.Usuario;
+import br.com.fiap.com.dao.UsuarioDAO;
+import br.com.fiap.conexao.ConexaoFactory;
+
+public class LoginServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    
+    private UsuarioDAO usuarioDAO;
+
+    @Override
+    public void init() {
+        try {
+            this.usuarioDAO = new UsuarioDAO(new ConexaoFactory().conexao());
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // Lógica do login
+        try {
+            String email = request.getParameter("email");
+            Usuario usuario = usuarioDAO.autenticarPorEmail(email);
+
+            if (usuario != null) {
+                response.getWriter().write(
+                    "{" +
+                    "\"email\":\"" + usuario.getEmail() + "\"," +
+                    "\"tipoUsuario\":\"" + usuario.getTipoUsuario() + "\"," +
+                    "\"idReferencia\":\"" + usuario.getIdReferencia() + "\"" +
+                    "}"
+                );
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("{\"error\":\"Credenciais inválidas\"}");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"error\":\"Erro no servidor\"}");
+        }
+    }
+}

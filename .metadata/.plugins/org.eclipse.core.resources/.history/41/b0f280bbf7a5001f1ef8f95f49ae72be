@@ -1,0 +1,30 @@
+package br.com.fiap.bo;
+import java.util.List;
+
+public class PassageiroBO {
+    private PassageiroDAO passageiroDAO;
+
+    public PassageiroBO() {
+        passageiroDAO = new PassageiroDAO();
+    }
+
+    public boolean adicionarPassageiro(Passageiro passageiro) {
+        if (passageiro.getCpf().length() != 11) {
+            return false; // CPF inválido
+        }
+        return passageiroDAO.inserirPassageiro(passageiro);
+    }
+
+    public List<Passageiro> listarPassageiros() {
+        return passageiroDAO.buscarTodos();
+    }
+
+    public boolean atualizarSaldo(String cpf, double valor) {
+        Passageiro passageiro = passageiroDAO.buscarPorCPF(cpf);
+        if (passageiro != null) {
+            passageiro.atualizarSaldo(valor);
+            return passageiroDAO.atualizarPassageiro(passageiro);
+        }
+        return false;
+    }
+}

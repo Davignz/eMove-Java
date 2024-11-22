@@ -1,0 +1,65 @@
+package br.com.fiap.resource;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+
+import br.com.fiap.beans.Motorista;
+import br.com.fiap.beans.Veiculo;
+import br.com.fiap.conexao.ConexaoFactory;
+
+@Path("/motorista")
+public class MotoristaResource {
+
+	 @POST
+	    @Path("/{cpf}")
+	    @Produces("application/json")
+	    @Consumes("application/json")
+	    public Response cadastrarMotorista(Motorista motorista, Veiculo veiculo) throws ClassNotFoundException {
+	        // Dados do motorista
+	        String sqlMotorista = "INSERT INTO MOTORISTAS (nome, cpf_motorista, email, telefone, cep) VALUES (?, ?, ?, ?, ?)";
+	        // Dados do veículo
+	        String sqlVeiculo = "INSERT INTO VEICULOS (placa, modelo, marca, autonomia_bateria, capacidade, cpf_motorista) VALUES (?, ?, ?, ?, ?, ?)";
+	        
+	        try (Connection conn = new ConexaoFactory().conexao()) {
+	            // Iniciar transação
+	            conn.setAutoCommit(false);
+	            
+	            // Inserir motorista
+	            try (PreparedStatement stmtMotorista = conn.prepareStatement(sqlMotorista)) {
+	                stmtMotorista.setString(1, motorista.getNome());
+	                stmtMotorista.setString(2, motorista.getCpf());
+	                stmtMotorista.setString(3, motorista.getEmail());
+	                stmtMotorista.setString(4, motorista.getTelefone());
+	                stmtMotorista.setString(5, motorista.getCep());
+	                stmtMotorista.executeUpdate();
+	            }
+
+	            // Inserir veículo
+	            try (PreparedStatement stmtVeiculo = conn.prepareStatement(sqlVeiculo)) {
+	                stmtVeiculo.setString(1, veiculo.getPlaca());
+	                stmtVeiculo.setString(2, veiculo.getModelo());
+	                stmtVeiculo.setString(3, veiculo.getMarca());
+	                stmtVeiculo.setInt(4, veiculo.getAutonomia_bateria());
+	                stmtVeiculo.setInt(5, veiculo.getCapacidade());
+	                stmtVeiculo.setString(6, motorista.getCpf());
+	                stmtVeiculo.executeUpdate();
+	            }
+
+	            // Commit da transação
+	            conn.commit();
+	            
+	            return Response.status(Response.Status.CREATED).entity("Motorista e Veículo cadastrados com sucesso").build();
+	            
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao cadastrar motorista").build();
+	        }
+	    }
+}

@@ -1,0 +1,35 @@
+package br.fiap.com.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import br.com.fiap.beans.Veiculo;
+
+public class VeiculoDAO {
+
+    private Connection connection;
+
+    public VeiculoDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    public VeiculoDAO() {
+		// TODO Auto-generated constructor stub
+	}
+
+	// Método para inserir o veículo no banco de dados
+    public void inserir(Veiculo veiculo) throws SQLException {
+        String sql = "INSERT INTO VEICULOS (placa, modelo, marca, autonomia_bateria, capacidade, cpf_motorista) " +
+                     "VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, veiculo.getPlaca());
+            stmt.setString(2, veiculo.getModelo());
+            stmt.setString(3, veiculo.getMarca());
+            stmt.setInt(4, veiculo.getAutonomiaBateria());
+            stmt.setInt(5, veiculo.getCapacidade());
+            stmt.setString(6, veiculo.getCpfMotorista());
+            stmt.executeUpdate();
+        }
+    }
+}
